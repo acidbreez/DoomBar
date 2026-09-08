@@ -1,6 +1,7 @@
 import json
 import inspect
 import os
+from pathlib import Path
 
 import gi # import gtk module
 
@@ -21,7 +22,8 @@ class StartMenu():
     def __init__(self):
         super().__init__()
 
-        self.config_favs = "./configs/favourites.json"
+        BASE_DIR = Path(__file__).resolve().parent.parent
+        self.config_favs = (f"{BASE_DIR}/configs/favourites.json")
 
         # Pop up windows
         self.popover = Gtk.Popover() # start-menu css class
@@ -221,12 +223,15 @@ class StartMenu():
             print(f"There was an error with your start menu: {e}")
 
     def add_favourite(self):
-        for item in self.fav:
-            app = Gio.DesktopAppInfo.new(item)
+        try:
+            for item in self.fav:
+                app = Gio.DesktopAppInfo.new(item)
 
-            if app:
-                self.create_favourite_button(app, "add_favourite")
-
+                if app:
+                    self.create_favourite_button(app, "add_favourite")
+        except OSError as e:
+            print(f"There was an issue: {e}")
+            
     def create_favourite_button(self, app, callback_name):
         fav_icon = app.get_icon()
         name = app.get_name()
