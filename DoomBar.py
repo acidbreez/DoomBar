@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 #import python modules
 import os
@@ -16,6 +16,7 @@ from modules.events import Events
 from modules.clock import MyClock
 from modules.control_center import ControlCenter
 from modules.battery import Battery
+from modules.media_player import MediaPlayer
 
 # import gtk modules
 import gi
@@ -38,7 +39,7 @@ HYPR_SOCK = f"{XDG_RUNTIME}/hypr/{HYPR_SIG}/.socket.sock"
 HYPR_SOCK2 = f"{XDG_RUNTIME}/hypr/{HYPR_SIG}/.socket2.sock"
 
 # Config file locations
-CONFIG = "/home/justin/.config/DoomBar/"
+CONFIG = os.path.expanduser("~/.config/DoomBar/")
 APP_BUTTON = (f"{CONFIG}theme/gentoo/start.svg")
 CC_BUTTON = (f"{CONFIG}theme/gentoo/settings.png")
 CSS_STYLE = (f"{CONFIG}theme/gentoo/style.css")
@@ -50,6 +51,9 @@ class MainWindow(Gtk.ApplicationWindow):
         # start loading dbus
         self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
 
+        #ctrl_dbus = ControlCenter(self.bus)
+        self.media_player = MediaPlayer(self.bus)
+
         # Window Properties
         window_properties.WindowProperties_init(self, monitor)
 
@@ -57,7 +61,7 @@ class MainWindow(Gtk.ApplicationWindow):
 
         self.clock = MyClock(self.clock_button)
         self.battery = Battery(self.battery_label, BATTERY, AC)
-        self.control = ControlCenter(self.control_center)
+        self.control = ControlCenter(self.control_center, self.bus)
         self.workspace_box = Events(self.ws_box, HYPR_SOCK, HYPR_SOCK2)
 
     def guiLayout(self):

@@ -7,11 +7,12 @@ from gi.repository import GdkPixbuf, Gdk, Gio, GLib, Gtk
 
 ART_SIZE = 125
 
-class MediaPlayer(Gtk.Box):
-    def __init__(self):
+class MediaPlayer():
+    def __init__(self, bus):
+        
         super().__init__()
 
-        bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
+        self.last_status = None
 
         self.media_proxy = Gio.DBusProxy.new_sync(
             bus,
@@ -41,6 +42,7 @@ class MediaPlayer(Gtk.Box):
         self.layout()
 
     def layout(self):
+        self.main = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         grid = Gtk.Grid(orientation=Gtk.Orientation.VERTICAL)
         control_grid = Gtk.Grid(orientation=Gtk.Orientation.HORIZONTAL)
         metaData_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=0)
@@ -59,23 +61,21 @@ class MediaPlayer(Gtk.Box):
         control_grid.set_valign(Gtk.Align.CENTER)
 
         ctrl_but_prev = Gtk.Button()
-        ctrl_but_pause = Gtk.Button()
+        self.ctrl_but_pause = Gtk.Button()
         ctrl_but_next = Gtk.Button()
         
         ctrl_but_prev.set_label(label="󰒮")
-        ctrl_but_pause.set_label(label="󰏤")        
+        self.ctrl_but_pause.set_label(label="󰏤")    
         ctrl_but_next.set_label(label="󰒭")
 
-        play_counter = [0]
-
         ctrl_but_prev.connect('clicked', self.dbus_command, "Previous", "")
-        ctrl_but_pause.connect('clicked', self.dbus_command, "PlayPause", play_counter)
+        self.ctrl_but_pause.connect('clicked', self.dbus_command, "PlayPause")
         ctrl_but_next.connect('clicked', self.dbus_command, "Next", "")
 
-        self.set_hexpand(False)
-        self.set_vexpand(False)
-        self.set_halign(Gtk.Align.CENTER)
-        self.set_valign(Gtk.Align.CENTER)
+        self.main.set_hexpand(False)
+        self.main.set_vexpand(False)
+        self.main.set_halign(Gtk.Align.CENTER)
+        self.main.set_valign(Gtk.Align.CENTER)
 
         metaData_box.set_hexpand(False)
         metaData_box.set_vexpand(False)
@@ -93,7 +93,7 @@ class MediaPlayer(Gtk.Box):
         metaData_box.append(box_art)
 
         control_grid.attach(ctrl_but_prev, 0, 0, 1, 1)
-        control_grid.attach(ctrl_but_pause, 1, 0, 1, 1)
+        control_grid.attach(self.ctrl_but_pause, 1, 0, 1, 1)
         control_grid.attach(ctrl_but_next, 2, 0, 1, 1)
 
         control_box.append(control_grid)
@@ -101,39 +101,44 @@ class MediaPlayer(Gtk.Box):
         grid.attach(metaData_box, 0, 0, 1, 1)
         grid.attach(control_box, 0, 1, 1, 1)
 
-        self.append(grid)
+        self.main.append(grid)
 
-        self.add_css_class("media-player")
+        self.main.add_css_class("media-player")
         metaData_box.add_css_class("meta-data-box")
         control_box.add_css_class("controls")
         ctrl_but_prev.add_css_class("prev-button")
-        ctrl_but_pause.add_css_class("pause-button")
+        self.ctrl_but_pause.add_css_class("pause-button")
         ctrl_but_next.add_css_class("next-button")
 
         self.get_art()
 
-    def dbus_command(self, button, command, play_counter):
-        self.media_proxy.call_sync(
-            command, # MethodName
-            None, # arguments
-            Gio.DBusProxyFlags.NONE,
-            -1, # default timer to wait
-            None
-        )
-
-        if command == "PlayPause":
-            if play_counter[0] == 1:
-                button.set_label(label="󰐊")
-                play_counter[0] -= 1
-            elif play_counter[0] == 0:
-                button.set_label(label="󰏤")
-                play_counter[0] += 1
+    def dbus_command(self, button, command):
+        try:
+            self.media_proxy.call_sync(
+                command, # MethodName
+                None, # arguments
+                Gio.DBusProxyFlags.NONE,
+                -1, # default timer to wait
+                None
+            )
+        except GLib.Error as e:
+            print(f"MPRIS command failed: {e}")
+            return
 
     def dbus_update(self, proxy, changed_properties, invalidated_properties):
         if "Metadata" in changed_properties.unpack():
             metadata = changed_properties["Metadata"]
 
             self.get_art()
+
+        if "PlaybackStatus" in changed_properties.unpack():
+            current_status = changed_properties["PlaybackStatus"]
+            if current_status != self.last_status:
+                self.last_status = current_status
+                if current_status == "Playing":
+                    self.ctrl_but_pause.set_label(label="󰏤")
+                elif current_status == "Paused":
+                    self.ctrl_but_pause.set_label(label="󰐊")
 
     def get_art(self):
         media_art = self.media_proxy.get_cached_property("Metadata")
