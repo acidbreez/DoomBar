@@ -7,6 +7,7 @@ import gi
 gi.require_version("Gtk", "4.0") # refer to gtk4
 gi.require_version("Gdk", "4.0")
 gi.require_version("Gtk4LayerShell", "1.0")
+gi.require_version("GLibUnix", "2.0")
 
 from gi.repository import Gtk, GLibUnix, GLib
 
@@ -37,6 +38,17 @@ class Events:
         if self.sock:
             self.active_workspaces()
 
+    def chk_version(self):
+        HYPR_CONFIG_LUA = os.path.expanduser("~/.config/hypr/hyprland.lua")
+        HYPR_CONFIG_CONF = os.path.expanduser("~/.config/hypr/hyprland.conf")
+
+        if os.path.exists(HYPR_CONFIG_LUA):
+            self.WS_CHNG_CONF = f'eval hl.dispatch(hl.dsp.focus({{workspace = "{self.workspace_id}"}}))'
+        elif os.path.exists(HYPR_CONFIG_CONF):
+            self.WS_CHNG_CONF = f'dispatch workspace {self.workspace_id}'
+        else:
+            print(f"No Hypr Files Detected!")
+
     def workspaces(self):
         try:
             def cmd(command: str):
@@ -55,17 +67,32 @@ class Events:
             for item in workspaces:
                 ws = str(item["id"])
                 
-                self.ws_button = Gtk.Button()
-                self.ws_label = Gtk.Label(label=ws)
+                button = Gtk.Button(label=ws)
+                button.add_css_class("workspace")
 
-                self.ws_button.set_child(self.ws_label)
-                self.ws_box.append(self.ws_button)
+                self.ws_box.append(button)
+                self.ws_name[ws] = button
 
-                self.ws_name[ws] = self.ws_button
-
+                button.connect('clicked', self.change_ws)
             return self.ws_box
         except OSError as e:
             print(f"Something went wrong with getting workspaces: {e}")
+
+    def change_ws(self, button):
+        try:
+            self.workspace_id = button.get_label()
+            self.chk_version()
+
+            if button.get_label() is None:
+                print(f"Invalid Button: {self.workspace_id}")
+            else:
+                with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
+                    sock.connect(self.HYPR_SOCK)
+                    sock.sendall(self.WS_CHNG_CONF.encode("UTF-8"))
+
+                return
+        except OSError as e:
+            print(f"Something went wrong with: {e}")
 
     def active_workspaces(self):
         GLibUnix.fd_add_full(
@@ -93,29 +120,37 @@ class Events:
                         continue
                     
                     ws = ws_id.split(">>")
-                    self.ws_id_final = ws[1].split(",").pop(1)
+                    self.ws_id_final = ws[1].split(",")[0].strip()
+
+                    for button in self.ws_name.values():
+                        button.remove_css_class("active")
+
+                    active_button = self.ws_name.get(self.ws_id_final)
+
+                    if active_button:
+                        active_button.add_css_class("active")
 
                 for create_ws in ws_data:
                     if "createworkspacev2>>" not in create_ws:
                         continue
 
                     create_ws = create_ws.split(">>")
-                    self.created_ws = create_ws[1].split(",").pop(1)
+                    self.created_ws = create_ws[1].split(",")[0].strip()
 
-                    self.ws_button = Gtk.Button()
-                    self.ws_label = Gtk.Label(label=self.created_ws)
+                    self.ws_button = Gtk.Button(label=self.created_ws)
+                    self.ws_button.add_css_class("workspace")
 
-                    self.ws_button.set_child(self.ws_label)
                     self.ws_box.append(self.ws_button)
-
                     self.ws_name[self.created_ws] = self.ws_button
+
+                    self.ws_button.connect("clicked", self.change_ws)
 
                 for del_ws in ws_data:
                     if "destroyworkspacev2>>" not in del_ws:
                         continue
 
                     del_ws = del_ws.split(">>")
-                    self.destroy_ws = del_ws[1].split(",").pop(1).strip()
+                    self.destroy_ws = del_ws[1].split(",")[0].strip()
 
                     targeted_button = self.ws_name[self.destroy_ws]
                     self.ws_box.remove(targeted_button)

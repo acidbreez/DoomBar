@@ -4,14 +4,15 @@ import subprocess
 from modules.media_player import MediaPlayer
 
 from gi.repository import GdkPixbuf, Gtk, GLib
+CONFIG = os.path.expanduser("~/.config/DoomBar/")
 
-WIFION = "/home/justin/Documents/programming/gtk-layer-shell/taskbar/theme/gentoo/gentoo_wifi.png"
-WIFIOFF = "/home/justin/Documents/programming/gtk-layer-shell/taskbar/theme/gentoo/gentoo_wifi_transparent.png"
-BT_ON = "/home/justin/Documents/programming/gtk-layer-shell/taskbar/theme/gentoo/gentoo_bt.png"
-BT_OFF = "/home/justin/Documents/programming/gtk-layer-shell/taskbar/theme/gentoo/gentoo_bt_transparent.png"
+WIFION = (f"{CONFIG}theme/gentoo/gentoo_wifi.png")
+WIFIOFF = (f"{CONFIG}theme/gentoo/gentoo_wifi_transparent.png")
+BT_ON = (f"{CONFIG}theme/gentoo/gentoo_bt.png")
+BT_OFF = (f"{CONFIG}theme/gentoo/gentoo_bt_transparent.png")
 
 class ControlCenter:
-    def __init__(self, button):
+    def __init__(self, button, bus):
         super().__init__()
         
         self.displayBrightness()
@@ -52,7 +53,7 @@ class ControlCenter:
         self.bt_button = Gtk.Button(child=self.bt_on)
 
         # create widgets
-        self.media_player = MediaPlayer()
+        self.media_player = MediaPlayer(bus)
 
         self.brightness = Gtk.Scale.new_with_range(
             orientation = Gtk.Orientation.HORIZONTAL,
@@ -76,8 +77,8 @@ class ControlCenter:
         self.control_center.set_has_arrow(False)
         self.control_center.set_parent(button)
 
-        self.media_player.set_hexpand(True)
-        self.media_player.set_vexpand(True)
+        self.media_player.main.set_hexpand(True)
+        self.media_player.main.set_vexpand(True)
 
         self.brightness_label.set_halign(Gtk.Align.FILL)
         self.brightness_label.set_hexpand(True)
@@ -124,7 +125,7 @@ class ControlCenter:
         # Setting Grid Objects
         control_center_grid.attach(self.wifi_button, 0, 0, 1, 1)
         control_center_grid.attach(self.bt_button, 0, 1, 1, 1)
-        control_center_grid.attach(self.media_player, 1, 0, 1, 3)
+        control_center_grid.attach(self.media_player.main, 1, 0, 1, 3)
         control_center_grid.attach(brightness_box, 0, 2, 2, 1)
         control_center_grid.attach(audio_box, 0, 3, 2, 1)
 
@@ -148,7 +149,7 @@ class ControlCenter:
 
     def button_change(self, button, counter, button_callback):
         
-        if "wifi-button" is button_callback:
+        if "wifi-button" == button_callback:
             if counter[0] == 1:
                 counter[0] -= 1
                 self.wifi_button.set_child(self.wifi_off)
@@ -158,7 +159,7 @@ class ControlCenter:
                 self.wifi_button.set_child(self.wifi_on)
                 print(f"wifi on {counter}")
 
-        elif "bt-button" is button_callback:
+        elif "bt-button" == button_callback:
             if counter[0] == 4:
                 counter[0] -= 1
                 self.bt_button.set_child(self.bt_off)

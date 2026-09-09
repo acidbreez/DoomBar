@@ -1,0 +1,13 @@
+The Technical RequirementsTo show tray icons, your Python script must do three things on the D-Bus session bus:
+
+Register ownership of the org.freedesktop.StatusNotifierWatcher name.
+Listen for the RegisterStatusNotifierItem method call from applications.
+Fetch the IconName or IconPixmap from the registered app path and render it in GTK.
+
+
+Before connecting, you need to understand the four addressing elements of a D-Bus target:
+
+Bus Type: Usually the System Bus (for hardware and system events) or Session Bus (per user login, for desktop apps).
+Service Name: A reverse-domain string identifying the app (e.g., org.freedesktop.UPower).
+Object Path: A filesystem-like path pointing to a specific object inside the app (e.g., /org/freedesktop/UPower/devices/DisplayDevice).
+Interface & Method: The specific namespace and function you want to trigger (e.g., Interface org.freedesktop.UPower.Device calling the Get method).

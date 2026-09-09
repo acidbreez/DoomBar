@@ -3,5 +3,6 @@
     "steam.desktop": true,
     "brave-browser.desktop": true,
     "codium.desktop": true,
-    "supertuxkart.desktop": true
+    "supertuxkart.desktop": true,
+    "cider.desktop": true
 }

@@ -44,10 +44,16 @@ APP_BUTTON = (f"{CONFIG}theme/gentoo/start.svg")
 CC_BUTTON = (f"{CONFIG}theme/gentoo/settings.png")
 CSS_STYLE = (f"{CONFIG}theme/gentoo/style.css")
 
+try:
+    if os.path.exists(CONFIG) is False:
+        CONFIG.mkdir(parents=True, exist_ok=True)
+except OSError as e:
+    print(f"There was an error with your config file: {e}")
+
 class MainWindow(Gtk.ApplicationWindow):
     def __init__(self, monitor, **kwargs):
         super().__init__(**kwargs, title="GTK-TaskBar")
-
+    
         # start loading dbus
         self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
 

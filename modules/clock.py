@@ -34,8 +34,6 @@ class MyClock:
             button.connect('clicked', self.on_clock_click)
 
             GLib.timeout_add_seconds(1, self.digital_clock, button)
-
-            print("init done")
         except OSError as e:
             print(f"There was an error with your calendar: {e}")
 

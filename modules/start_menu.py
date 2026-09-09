@@ -39,6 +39,7 @@ class StartMenu():
 
         try:
             self.favourites = {}
+            self.fav = {}
 
             if os.path.exists(self.config_favs) and os.path.getsize(self.config_favs) != 0:
                 with open(self.config_favs, "r") as f:
@@ -231,7 +232,7 @@ class StartMenu():
                     self.create_favourite_button(app, "add_favourite")
         except OSError as e:
             print(f"There was an issue: {e}")
-            
+
     def create_favourite_button(self, app, callback_name):
         fav_icon = app.get_icon()
         name = app.get_name()
