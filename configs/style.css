@@ -1,0 +1,703 @@
+/* main window colors */
+@define-color main-window rgba(0, 0, 0, 0);
+@define-color start-widget rgba(0, 0, 0, 0);
+@define-color clock-widget rgba(0, 0, 0, 0);
+@define-color end-widget rgba(0, 0, 0, 0);
+
+/* gentoo purple */
+@define-color widget-button rgba(84, 72, 122, 1); 
+@define-color widget-color rgba(84, 72, 122, 1); 
+@define-color widget-label rgba(84, 72, 122, 1);
+
+/* gentoo purple semi transparent */
+@define-color popup-window-bg rgba(84, 72, 122, 0.4); 
+@define-color popup-window-contents rgba(84, 72, 122, 0.7);
+
+/* gentoo light purple */
+@define-color button-hover rgba(97, 83, 141, 1);
+@define-color search-bar-bg rgba(97, 83, 141, 1);
+@define-color slider-button rgba(97, 83, 141, 1);
+
+/* gentoo grey */
+@define-color border-color rgba(221, 218, 236, 1); 
+@define-color slider-color rgba(221, 218, 236, 1); 
+@define-color button-active rgba(221, 218, 236, 1);
+
+@define-color gentoo-green rgba(115, 210, 22, 1);
+@define-color gentoo-red rgba(217, 83, 79, 1);
+@define-color warning #e0a009;
+
+
+* {
+  min-height: 0px;
+  font-family: Material Design Icons, JetBrainsMono Nerd Font;
+  font-size: 14px;
+} 
+
+/* Main Window settings */
+
+window {
+    background-color: transparent;
+    border: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.main-window {
+    background-color: transparent;
+    transition-property: background-color;
+    transition-duration: 0.5s;
+    border: none;
+    border-radius: 10px;
+    padding: 0px;
+    margin: 0px;
+}
+
+/* main containers */
+
+.start-container {
+    background-color: transparent;
+    border: none;
+    border-radius: 20px;
+    padding: 0px 0px;
+    margin: 0px;
+}
+
+.clock-container {
+    background-color: transparent;
+    border: none;
+    border-radius: 10%;
+    font-weight: bold;
+    padding: 0px 0px;
+    margin: 0px;
+}
+
+.end-container {
+    background-color: transparent;
+    border: none;
+    border-radius: 10%;
+    padding: 0px 0px;
+    margin: 0px;
+}
+
+/* Main bar Buttons */
+
+.start-container button {
+    background-color: @widget-button;
+    border: none;
+    border-radius: 50%;
+    padding: 4px 0px;
+    margin: 2px;
+    transition: all 0.2s ease;
+}
+
+.start-container button:hover {
+    background-color: @button-hover;
+    border: 1px solid @border-color;
+    border-radius: 50%;
+    padding: 4px 0px;
+    margin: 1px;
+    transition: all 0.2s ease;
+}
+
+.workspace {
+    background-color: transparent;
+    border: none;
+    border-radius: 500px;
+    padding: 0px;
+    margin: 0px;
+}
+
+.workspace button {
+    background-color: transparent;
+    border: none;
+    border-radius: none;
+    padding: 0px 0px;
+    margin: 2px;
+}
+
+.workspace button label {
+    background-color: @widget-button;
+    border: none;
+    border-radius: none;
+    padding: 0px 7px;
+    margin: 0px;
+}
+
+.workspace button:hover {
+    background-color: @button-hover;
+    border: 1px solid @border-color;
+    border-radius: 50%;
+    padding: 0px 0px;
+    margin: 1px;
+    transition: all 0.2s ease;
+}
+
+button.workspace.active {
+    background-color: @button-hover;
+    border: 1px solid @border-color;
+    border-radius: 50%;
+    padding: 0px 0px;
+    margin: 1px;
+    transition: all 0.2s ease;
+}
+
+button.workspace.active label {
+    background-color: @border-color;
+    color: @widget-button;
+    border: none;
+    border-radius: none;
+    padding 0px;
+    margin: 0px;
+}
+
+.clock-container button {
+    background-color: @widget-button;
+    border-radius: 20px;
+    padding: 0px 0px;
+    margin: 2px;
+}
+
+.clock-container button:hover {
+    background-color: @button-hover;
+    border: 1px solid @border-color;
+    border-radius: 20px;
+    padding: 0px 0px;
+    margin: 1px;
+    transition: all 0.2s ease;
+}
+
+.end-container button {
+    background-color: @widget-button;
+    border-radius: 20px;
+    border: none;
+    padding: 0px 0px;
+    margin: 2px;
+    font-weight: bold;
+}
+
+.end-container button:hover {
+    background-color: @button-hover;
+    border: 1px solid @border-color;
+    border-radius: 20px;
+    padding: 0px 0px;
+    margin: 1px;
+    transition: all 0.2s ease;
+}
+
+button:active {
+    background-color: @button-active;
+} 
+
+/* Main bar Labels */
+
+.end-container label {
+    background-color: @widget-button;
+    border-radius: 20px;
+    padding: 0px 8px;
+    margin: 2px;
+    font-weight: bold;
+}
+
+.workspace label {
+    background-color: @widget-button;
+    border-radius: 50%;
+    padding: 0px 8px;
+    margin: 0px;
+}
+
+.clock-container label{
+    background-color: @widget-button;
+    border-radius: 20px;
+    padding: 0px 8px;
+    margin: 0px;
+} 
+
+/* Start menu widget settings */
+
+.start-menu {
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 0px 0px;
+    margin: 0px 0px -3px -6px;
+    min-height: 600px;
+    min-width: 685px;
+}
+
+.start-menu grid {
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 0px;
+    margin: 0px;
+}
+
+.start-menu contents {
+    background-color: transparent;
+    border: 1px solid white;
+    margin: -6px;
+}
+
+.start-menu button label {
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 0px;
+    margin: 0px;
+}
+
+.start-menu entry {
+    background-color: @search-bar-bg;
+    border: 1px solid @border-color;
+    border-radius: 10px;
+    min-height: 30px;
+    padding: 0px 0px 0px 0px;
+    margin: 1px;
+}
+
+/* app-list and scrolled box are for the main apps list */
+
+.app-list {
+    background-color: @popup-window-contents;
+    border: 1px solid white;
+    min-width: 250px;
+    border-radius: 10px;
+    margin: 5px 0px 5px 5px;
+}
+
+.app-list button {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    border-radius: 10px;
+    padding:3px;
+    margin: 1px;
+    min-width: 0px;
+}
+
+.app-list button:hover {
+    background-color: @widget-button;
+    border: none;
+    border-radius: 10px;
+    padding: 3px;
+    margin: 1px;
+}
+
+.app-list button:active {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    border-radius: 10px;
+    padding:3px;
+    margin: 1px;
+}
+
+.app-list label {
+    background-color: transparent;
+}
+
+.scrolled-box {
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 0px 0px 0px 0px;
+}
+
+.scrolled-box viewport {
+    background-color: transparent;
+    border: none;
+    padding: 0px 30px 0px 0px;
+}
+
+.scrolled-box scrollbar {
+    background-color: transparent;
+    border: none;
+}
+
+.scrolled-box scrollbar.vertical {
+    background-color: transparent;
+    border: none;
+    min-width: 0px;
+    margin: 5px 0px 5px 0px;
+    padding: 0px;
+}
+
+.scrolled-box scrollbar:hover {
+    background: @button-hover;
+    border: none;
+    border-radius: 18px;
+    min-width: 0px;
+    margin: 5px 0px 5px 0px;
+    padding: 0px;
+}
+
+.scrolled-box scrollbar slider {
+    background-color: @slider-color;
+    min-width: 18px;
+    min-height: 18px;
+    border: none;
+    border-radius: 18px;
+}
+
+.scrolled-box scrollbar trough {
+    background-color: @search-bar-bg;
+    min-height: 18px;
+    border-radius: 18px;
+    border: 1px solid @border-color;
+    padding: 0px;
+    margin: 2px 0px;
+    transition: background-color 0.2s ease;
+}
+
+.favourites {
+    background-color: @popup-window-contents;
+    border: 1px solid @border-color;
+    min-width: 350px;
+    border-radius: 10px;
+    margin: 5px;
+}
+
+.favourites label {
+    background-color: @widget-label;
+    border: 1px solid white;
+    border-radius: 10px;
+    margin: 2px;
+}
+
+.favourites button {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    border-radius: 10px;
+    padding:3px;
+    margin: 1px;
+    min-width: 0px;
+}
+.favourites button:hover {
+    background-color: @widget-button;
+    border: none;
+    border-radius: 10px;
+    padding: 3px;
+    margin: 1px;
+}
+
+.search-box {
+    background-color: transparent;
+    border: none;
+    border-radius: 0px;
+    margin: 2px;
+}
+
+.search-box label {
+    background-color: @widget-label;
+    border: 1px solid white;
+    border-radius: 10px;
+    margin: 2px;
+}
+
+.search-box button {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    border-radius: 10px;
+    padding:3px;
+    margin: 1px;
+    min-width: 0px;
+}
+
+.search-box button:hover {
+    background-color: @widget-button;
+    border: none;
+    border-radius: 10px;
+    padding: 3px;
+    margin: 1px;
+}
+
+.search-label {
+    background-color: @popup-window-contents;
+    border: 1px solid @border-color;
+    border-radius: 10px;
+    padding: 3px;
+    margin: 5px;
+}
+
+.search-label label {
+    background-color: @widget-label;
+    border: 1px solid white;
+    border-radius: 10px;
+    margin: 2px;
+}
+
+.main-start-window {
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 0px;
+    margin: 0px;
+}
+
+popover.calendar-window header {
+    background-color: @popup-window-contents;
+    border: 1px solid @border-color;
+    border-radius: 10px 10px 0px 0px;
+    padding: 10px;
+    margin: 0px;
+}
+
+popover.calendar-window contents {
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 0px;
+    margin: 1px;
+}
+
+popover.calendar-window contents grid {
+    background-color: @popup-window-contents;
+    border-bottom: 1px solid @border-color;
+    border-left: 1px solid @border-color;
+    border-right: 1px solid @border-color;
+    border-top: none;
+    border-radius: 0px 0px 10px 10px;
+    padding: 0px;
+    margin: 0px;
+}
+
+popover.calendar-window contents grid label {
+    background-color: @widget-label;
+    border: 1px solid @border-color;
+    border-radius: 20px;
+    padding: 5px;
+    margin: 5px;
+}
+
+popover.calendar-window contents grid label:hover {
+    background-color: @button-hover;
+}
+
+popover.calendar-window contents button {
+    background-color: @widget-button;
+    border: 1px solid @border-color;
+    border-radius: 20px;
+    padding: 0px;
+    margin: 5px;
+}
+
+popover.calendar-window contents button:hover {
+    background-color: @button-hover;
+    background-image: none;
+    border: 1px solid @border-color;
+    border-radius: 20px;
+    padding: 0px;
+    margin: 5px;
+}
+
+popover.control-center {
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 1px;
+    margin: 0px 0px 1px 0px;
+}
+
+popover.control-center contents {
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 0px;
+    margin: 0px;
+}
+
+popover.control-center contents label {
+    background-color: @widget-label;
+    border-top: 1px solid @border-color;
+    border-left: 1px solid @border-color;
+    border-right: 1px solid @border-color;
+    border-radius: 10px 10px 0px 0px;
+    min-width: 300px;
+    padding: 0px;
+    margin: 5px 0px 0px 0px;
+}
+
+popover.control-center slider {
+    background-color: fuchsia;
+    border: none;
+    min-width: 18px;
+    min-height: 18px;
+    padding: 0px;
+    margin: 0px;
+}
+
+popover.control-center scale {
+    background-color: @widget-color;
+    border-left: 1px solid @border-color;
+    border-right: 1px solid @border-color;
+    border-bottom: 1px solid @border-color;
+    border-radius: 0px 0px 10px 10px;
+    padding: 0px 15px 5px 15px;
+    margin: 0px;
+}
+
+popover.control-center scale trough {
+    background-color: @popup-window-contents;
+    border: 1px solid @border-color;
+    border-radius: 18px;
+    min-height: 18px;
+    padding: 0px;
+    margin: 0px;
+}
+
+popover.control-center scale trough highlight {
+    background-color: @border-color;
+    border: 1px solid @border-color;
+    border-radius: 18px;
+    min-height: 18px;
+    padding: 0px;
+    margin: 0px;
+}
+
+popover.control-center grid {
+    background-color: @popup-window-contents;
+    border: 1px solid @border-color;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 0px;
+}
+
+popover.control-center button.wifi-button {
+    background-color: @border-color;
+    background-image: none;
+    border: 1px solid white;
+    border-radius: 10px;
+    min-height: 50px;
+    padding: 5px;
+    margin: 5px;
+}
+
+popover.control-center button.wifi-button:hover {
+    background-color: @popup-window-bg;
+    background-image: none;
+    border: 1px solid white;
+    border-radius: 10px;
+    min-height: 50px;
+    padding: 5px;
+    margin: 5px;
+}
+
+popover.control-center button.bt-button {
+    background-color: @border-color;
+    background-image: none;
+    border: 1px solid @border-color;
+    border-radius: 10px;
+    min-height: 50px;
+    padding: 5px;
+    margin: 5px;
+}
+
+popover.control-center button.bt-button:hover {
+    background-color: @popup-window-bg;
+    background-image: none;
+    border: 1px solid @border-color;
+    border-radius: 10px;
+    min-height: 50px;
+    padding: 5px;
+    margin: 5px;
+}
+
+popover.control-center box.media-player {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    border-radius: 10px;
+    min-height: 100px;
+    min-width: 100px;
+    padding: 0px;
+    margin: 0px 0px 50px 0px;
+}
+
+popover.control-center box.media-player grid {
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 0px;
+    margin: 0px;
+}
+
+popover.control-center box.media-player .meta-data-box {
+    background-color: @border-color;
+    background-image: none;
+    border-top: 1px solid white;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    border-bottom: none;
+    border-radius: 10px 10px 0px 0px;
+    min-height: 100px;
+    padding: 5px 5px 3px 5px;
+    margin: 5px 10px 0px 18px;
+}
+
+popover.control-center box.media-player .meta-data-box box {
+    background-color: @popup-window-contents;
+    background-image: none;
+    border: 1px solid @popup-window-contents;
+    border-radius: 0px;
+    min-height: 75px;
+    min-width: 125px;
+    padding: 0px;
+    margin: 0px;
+}
+
+popover.control-center box.media-player .controls {
+    background-color: @border-color;
+    background-image: none;
+    border-top: none;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    border-bottom: 1px solid white;
+    border-radius: 0px 0px 10px 10px;
+    min-height: 30px;
+    padding: 3px 5px 3px 5px;
+    margin: 0px 0px 10px 8px;
+}
+
+popover.control-center box.media-player .controls grid {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    min-width: 125px;
+    padding: 1px;
+    margin: 0px;
+}
+
+popover.control-center box.media-player .prev-button,
+popover.control-center box.media-player .pause-button,
+popover.control-center box.media-player .next-button {
+    background-color: @widget-button;
+    border: none;
+    border-radius: 5px;
+    min-width: 5px;
+    padding: 0px;
+    margin: 5px;
+}
+
+popover.control-center box.media-player .prev-button:hover,
+popover.control-center box.media-player .pause-button:hover,
+popover.control-center box.media-player .next-button:hover {
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 0px;
+    margin: 5px;
+}
+
+popover.control-center box.media-player .prev-button label,
+popover.control-center box.media-player .pause-button label,
+popover.control-center box.media-player .next-button label {
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+    min-width: 20px;
+    padding: 0px;
+    margin: 0px;
+}
