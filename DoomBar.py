@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 #import python modules
 import os
@@ -53,12 +53,6 @@ except OSError as e:
 class MainWindow(Gtk.ApplicationWindow):
     def __init__(self, monitor, **kwargs):
         super().__init__(**kwargs, title="GTK-TaskBar")
-    
-        # start loading dbus
-        self.bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
-
-        #ctrl_dbus = ControlCenter(self.bus)
-        self.media_player = MediaPlayer(self.bus)
 
         # Window Properties
         window_properties.WindowProperties_init(self, monitor)
@@ -67,7 +61,7 @@ class MainWindow(Gtk.ApplicationWindow):
 
         self.clock = MyClock(self.clock_button)
         self.battery = Battery(self.battery_label, BATTERY, AC)
-        self.control = ControlCenter(self.control_center, self.bus)
+        self.control = ControlCenter(self.control_center)
         self.workspace_box = Events(self.ws_box, HYPR_SOCK, HYPR_SOCK2)
 
     def guiLayout(self):
