@@ -3,7 +3,7 @@ import subprocess
 
 from modules.media_player import MediaPlayer
 
-from gi.repository import GdkPixbuf, Gtk, GLib
+from gi.repository import GdkPixbuf, Gio, Gtk, GLib
 CONFIG = os.path.expanduser("~/.config/DoomBar/")
 
 WIFION = (f"{CONFIG}theme/gentoo/gentoo_wifi.png")
@@ -12,11 +12,13 @@ BT_ON = (f"{CONFIG}theme/gentoo/gentoo_bt.png")
 BT_OFF = (f"{CONFIG}theme/gentoo/gentoo_bt_transparent.png")
 
 class ControlCenter:
-    def __init__(self, button, bus):
+    def __init__(self, button):
         super().__init__()
+        bus = Gio.bus_get_sync(Gio.BusType.SESSION, None)
         
+        self.setPerc = 0
         self.displayBrightness()
-        self.currAudio()
+        self.check_audio()
 
         # button images
         pixbuf_off = GdkPixbuf.Pixbuf.new_from_file_at_scale( filename=WIFIOFF, width=50, height=50, preserve_aspect_ratio=True)
@@ -68,7 +70,7 @@ class ControlCenter:
             max = 100.0,
             step = 1.0,
         )
-        
+
         # Create Labels
         self.brightness_label = Gtk.Label(label=f"Display Brightness {int(self.perc)}%")
         self.volume_label = Gtk.Label(label=f"Volume: {int(self.setPerc)}%")
@@ -88,7 +90,6 @@ class ControlCenter:
         self.brightness.set_hexpand(True)
         self.brightness.set_vexpand(False)
 
-        #self.brightness.set_size_request(300, -1)
         self.brightness.set_value(self.perc)
         self.brightness_signal_id = self.brightness.connect("value-changed", self.setBrightness)
 
@@ -109,7 +110,6 @@ class ControlCenter:
         self.volume.set_vexpand(False)
 
         self.volume_signal_id = self.volume.connect("value-changed", self.setAudio)
-        # self.volume.set_size_request(300, -1)
         self.volume.set_value(self.setPerc)
             
         audio_box.append(self.volume_label)
@@ -212,12 +212,30 @@ class ControlCenter:
             print(f"Tracking error: {e}")
         return True
 
-    def currAudio(self):
+    def check_audio(self):
         try:
-            currVolume = subprocess.run(["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"], capture_output = True)
-            self.setPerc = float(currVolume.stdout.split()[1]) * 100
-        except OSError as e:
-            print(f"Something went wrong with getting volume: {e}")
+            audio_chk = Gio.Subprocess.new(["wpctl", "status"], Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_PIPE)
+            audio_chk.communicate_utf8_async(None, None, self.audio_status)
+        except GLib.GError as e:
+            print(f"{e}")
+
+    def audio_status(self, audio_chk, result):
+        try:
+            success, stdout, stderr = audio_chk.communicate_utf8_finish(result)
+
+            if audio_chk.get_if_exited():
+                if audio_chk.get_exit_status() == 0:
+                    print("PipeWire is started")
+                    currVolume = Gio.Subprocess.new(["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"], Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_PIPE)
+                    success, stdout, stderr = currVolume.communicate_utf8(None, None)
+                    print(f"{stdout.split()[-1]}")
+                    self.setPerc = float(stdout.split()[-1]) * 100
+                    print(f"{self.setPerc}")
+                else:
+                    print("Still waiting on PipeWire")
+                    GLib.timeout_add_seconds(1, self.audio_status)
+        except GLib.GError as e:
+            print(f"{e}")
 
     def setAudio(self, scale):
         try:
